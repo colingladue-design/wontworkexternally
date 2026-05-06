@@ -1,4 +1,6 @@
-const MUSCLES = ['Chest', 'Shoulder', 'Bicep', 'Tricep', 'Trap', 'Back', 'Quad', 'Ham', 'Cardio 30', 'Cardio 45', 'Cardio 60'];
+const MUSCLES = ['Chest', 'Shoulder', 'Bicep', 'Tricep', 'Trap', 'Back', 'Quad', 'Ham'];
+const CARDIO  = ['Cardio 30', 'Cardio 45', 'Cardio 60'];
+let currentTab = 'muscles';
 const STORAGE_KEY = 'workout_data';
 
 // A "workout day" runs from 4am to 3:59am the following morning.
@@ -78,10 +80,15 @@ function render() {
   const today = workoutDayKey();
   document.getElementById('date-display').textContent = formatDayLabel(today);
 
+  document.querySelectorAll('.segment').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === currentTab);
+  });
+
+  const items = currentTab === 'muscles' ? MUSCLES : CARDIO;
   const list = document.getElementById('muscle-list');
   list.innerHTML = '';
 
-  for (const muscle of MUSCLES) {
+  for (const muscle of items) {
     const state = muscleState(muscle);
 
     const li = document.createElement('li');
@@ -123,6 +130,13 @@ function scheduleRollover() {
   if (now >= next) next.setDate(next.getDate() + 1);
   setTimeout(() => { render(); scheduleRollover(); }, next - now);
 }
+
+document.querySelectorAll('.segment').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentTab = btn.dataset.tab;
+    render();
+  });
+});
 
 render();
 scheduleRollover();
