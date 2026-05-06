@@ -39,8 +39,10 @@ function save(data) {
 function muscleState(muscle) {
   const data = load();
   const today = workoutDayKey();
+  const past = pastWorkoutDayKeys(6); // days 1–6 back (< 7 calendar days)
   if (data[today]?.includes(muscle)) return 'today';
-  if (pastWorkoutDayKeys(7).some(k => data[k]?.includes(muscle))) return 'recent';
+  if (data[past[0]]?.includes(muscle)) return 'yesterday';
+  if (past.slice(1).some(k => data[k]?.includes(muscle))) return 'recent';
   return 'none';
 }
 

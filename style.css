@@ -8,6 +8,8 @@
   --green-dim: rgba(34, 197, 94, 0.12);
   --blue: #3b82f6;
   --blue-dim: rgba(59, 130, 246, 0.12);
+  --orange: #f97316;
+  --orange-dim: rgba(249, 115, 22, 0.12);
   --check-size: 26px;
   --radius: 10px;
 }
@@ -70,8 +72,9 @@ h1 {
 .muscle-item:hover  { background: #202020; }
 .muscle-item:active { background: #1c1c1c; }
 
-.muscle-item.today  { border-color: #1a3d29; background: var(--green-dim); }
-.muscle-item.recent { border-color: #1a2a45; background: var(--blue-dim); }
+.muscle-item.today      { border-color: #1a3d29; background: var(--green-dim); }
+.muscle-item.yesterday  { border-color: #3d2510; background: var(--orange-dim); }
+.muscle-item.recent     { border-color: #1a2a45; background: var(--blue-dim); }
 
 .checkbox {
   width: var(--check-size);
@@ -116,6 +119,9 @@ h1 {
   background: var(--blue);
 }
 
+.muscle-item.yesterday .checkbox { border-color: var(--orange); }
+.muscle-item.yesterday .dot { display: block; background: var(--orange); }
+
 .muscle-item.recent .checkbox { border-color: var(--blue); }
 .muscle-item.recent .dot { display: block; }
 
@@ -124,5 +130,6 @@ h1 {
   font-weight: 500;
 }
 
-.muscle-item.today  .name { color: var(--green); }
-.muscle-item.recent .name { color: var(--blue); }
+.muscle-item.today     .name { color: var(--green); }
+.muscle-item.yesterday .name { color: var(--orange); }
+.muscle-item.recent    .name { color: var(--blue); }
