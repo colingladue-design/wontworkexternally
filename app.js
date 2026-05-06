@@ -1,4 +1,4 @@
-const MUSCLES = ['Chest', 'Shoulder', 'Bicep', 'Tricep', 'Trap', 'Back', 'Quad', 'Ham'];
+const MUSCLES = ['Chest', 'Shoulder', 'Bicep', 'Tricep', 'Trap', 'Back', 'Quad', 'Ham', 'Cardio 30', 'Cardio 45', 'Cardio 60'];
 const STORAGE_KEY = 'workout_data';
 
 // A "workout day" runs from 4am to 3:59am the following morning.
