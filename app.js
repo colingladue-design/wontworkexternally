@@ -1,5 +1,5 @@
 const MUSCLES = ['Chest', 'Shoulder', 'Bicep', 'Tricep', 'Trap', 'Back', 'Quad', 'Ham'];
-const CARDIO  = ['Cardio 30', 'Cardio 45', 'Cardio 60'];
+const CARDIO  = ['Cardio 30', 'Cardio 45', 'Cardio 60', '10k Day', '12k Day'];
 let currentTab = 'muscles';
 const STORAGE_KEY = 'workout_data';
 
