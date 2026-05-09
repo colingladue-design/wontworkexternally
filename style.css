@@ -10,6 +10,8 @@
   --blue-dim: rgba(59, 130, 246, 0.12);
   --orange: #f97316;
   --orange-dim: rgba(249, 115, 22, 0.12);
+  --yellow: #eab308;
+  --yellow-dim: rgba(234, 179, 8, 0.12);
   --check-size: 26px;
   --radius: 10px;
 }
@@ -102,6 +104,7 @@ h1 {
 
 .muscle-item.today      { border-color: #1a3d29; background: var(--green-dim); }
 .muscle-item.yesterday  { border-color: #3d2510; background: var(--orange-dim); }
+.muscle-item.expiring   { border-color: #3d3510; background: var(--yellow-dim); }
 .muscle-item.recent     { border-color: #1a2a45; background: var(--blue-dim); }
 
 .checkbox {
@@ -150,6 +153,9 @@ h1 {
 .muscle-item.yesterday .checkbox { border-color: var(--orange); }
 .muscle-item.yesterday .dot { display: block; background: var(--orange); }
 
+.muscle-item.expiring .checkbox { border-color: var(--yellow); }
+.muscle-item.expiring .dot { display: block; background: var(--yellow); }
+
 .muscle-item.recent .checkbox { border-color: var(--blue); }
 .muscle-item.recent .dot { display: block; }
 
@@ -160,4 +166,5 @@ h1 {
 
 .muscle-item.today     .name { color: var(--green); }
 .muscle-item.yesterday .name { color: var(--orange); }
+.muscle-item.expiring  .name { color: var(--yellow); }
 .muscle-item.recent    .name { color: var(--blue); }
