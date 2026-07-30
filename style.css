@@ -159,6 +159,17 @@ h1 {
 .muscle-item.recent .checkbox { border-color: var(--blue); }
 .muscle-item.recent .dot { display: block; }
 
+.count {
+  margin-left: auto;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--border);
+}
+
+.count.nonzero {
+  color: var(--muted);
+}
+
 .name {
   font-size: 1.05rem;
   font-weight: 500;

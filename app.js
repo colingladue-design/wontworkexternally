@@ -49,6 +49,13 @@ function muscleState(muscle) {
   return 'none';
 }
 
+function muscleCount(muscle) {
+  const data = load();
+  const today = workoutDayKey();
+  const days = [today, ...pastWorkoutDayKeys(6)];
+  return days.filter(k => data[k]?.includes(muscle)).length;
+}
+
 function toggle(muscle) {
   const data = load();
   const today = workoutDayKey();
@@ -110,8 +117,14 @@ function render() {
     name.className = 'name';
     name.textContent = muscle;
 
+    const count = muscleCount(muscle);
+    const countEl = document.createElement('span');
+    countEl.className = 'count' + (count > 0 ? ' nonzero' : '');
+    countEl.textContent = count;
+
     li.appendChild(box);
     li.appendChild(name);
+    li.appendChild(countEl);
 
     const act = () => toggle(muscle);
     li.addEventListener('click', act);
