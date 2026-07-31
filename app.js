@@ -30,39 +30,59 @@ function pastWorkoutDayKeys(n) {
 }
 
 function load() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
-  catch { return {}; }
+  try {
+    const raw = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    // Migrate old array format (muscle names) to count format ({ muscle: n })
+    const result = {};
+    for (const [day, val] of Object.entries(raw)) {
+      if (Array.isArray(val)) {
+        result[day] = {};
+        for (const m of val) result[day][m] = 1;
+      } else {
+        result[day] = val;
+      }
+    }
+    return result;
+  } catch { return {}; }
 }
 
 function save(data) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
+function getCount(data, day, muscle) {
+  return data[day]?.[muscle] || 0;
+}
+
 function muscleState(muscle) {
   const data = load();
   const today = workoutDayKey();
-  const past = pastWorkoutDayKeys(6); // days 1-6 back (< 7 calendar days)
-  if (data[today]?.includes(muscle)) return 'today';
-  if (data[past[0]]?.includes(muscle)) return 'yesterday';
-  if (past.slice(1, 5).some(k => data[k]?.includes(muscle))) return 'recent';
-  if (data[past[5]]?.includes(muscle)) return 'expiring';
+  const past = pastWorkoutDayKeys(6);
+  if (getCount(data, today, muscle) > 0) return 'today';
+  if (getCount(data, past[0], muscle) > 0) return 'yesterday';
+  if (past.slice(1, 5).some(k => getCount(data, k, muscle) > 0)) return 'recent';
+  if (getCount(data, past[5], muscle) > 0) return 'expiring';
   return 'none';
 }
 
-function muscleCount(muscle) {
-  const data = load();
-  const today = workoutDayKey();
-  const days = [today, ...pastWorkoutDayKeys(6)];
-  return days.filter(k => data[k]?.includes(muscle)).length;
+function todayCount(muscle) {
+  return getCount(load(), workoutDayKey(), muscle);
 }
 
 function toggle(muscle) {
   const data = load();
   const today = workoutDayKey();
-  if (!data[today]) data[today] = [];
-  const idx = data[today].indexOf(muscle);
-  if (idx === -1) data[today].push(muscle);
-  else data[today].splice(idx, 1);
+  if (!data[today]) data[today] = {};
+  data[today][muscle] = getCount(data, today, muscle) > 0 ? 0 : 1;
+  save(data);
+  render();
+}
+
+function adjust(muscle, delta) {
+  const data = load();
+  const today = workoutDayKey();
+  if (!data[today]) data[today] = {};
+  data[today][muscle] = Math.max(0, getCount(data, today, muscle) + delta);
   save(data);
   render();
 }
@@ -84,6 +104,14 @@ function makeCheckboxSVG() {
   return svg;
 }
 
+function makeCountBtn(label, onClick) {
+  const btn = document.createElement('button');
+  btn.className = 'count-btn';
+  btn.textContent = label;
+  btn.addEventListener('click', e => { e.stopPropagation(); onClick(); });
+  return btn;
+}
+
 function render() {
   const today = workoutDayKey();
   document.getElementById('date-display').textContent = formatDayLabel(today);
@@ -98,6 +126,7 @@ function render() {
 
   for (const muscle of items) {
     const state = muscleState(muscle);
+    const n = todayCount(muscle);
 
     const li = document.createElement('li');
     li.className = `muscle-item ${state}`;
@@ -117,14 +146,18 @@ function render() {
     name.className = 'name';
     name.textContent = muscle;
 
-    const count = muscleCount(muscle);
+    const countWrap = document.createElement('div');
+    countWrap.className = 'count-wrap';
+    countWrap.appendChild(makeCountBtn('−', () => adjust(muscle, -1)));
     const countEl = document.createElement('span');
-    countEl.className = 'count' + (count > 0 ? ' nonzero' : '');
-    countEl.textContent = count;
+    countEl.className = 'count';
+    countEl.textContent = n;
+    countWrap.appendChild(countEl);
+    countWrap.appendChild(makeCountBtn('+', () => adjust(muscle, 1)));
 
     li.appendChild(box);
     li.appendChild(name);
-    li.appendChild(countEl);
+    li.appendChild(countWrap);
 
     const act = () => toggle(muscle);
     li.addEventListener('click', act);
