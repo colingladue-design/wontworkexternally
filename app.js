@@ -2,7 +2,6 @@ const MUSCLES = ['Chest', 'Shoulder', 'Bicep', 'Tricep', 'Trap', 'Back', 'Quad',
 const CARDIO  = ['Cardio 30', 'Cardio 45', 'Cardio 60', '10k Day', '12k Day', '15k Day', '50 Flights', '100 Flights'];
 let currentTab = 'muscles';
 const STORAGE_KEY = 'workout_data';
-const undoStack = [];
 
 // A "workout day" runs from 4am to 3:59am the following morning.
 function workoutDayKey(date = new Date()) {
@@ -48,23 +47,7 @@ function load() {
 }
 
 function save(data) {
-  undoStack.push(localStorage.getItem(STORAGE_KEY));
-  if (undoStack.length > 10) undoStack.shift();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  const btn = document.getElementById('undo-btn');
-  if (btn) btn.disabled = false;
-}
-
-function undo() {
-  if (!undoStack.length) return;
-  const snapshot = undoStack.pop();
-  if (snapshot !== null) {
-    localStorage.setItem(STORAGE_KEY, snapshot);
-  } else {
-    localStorage.removeItem(STORAGE_KEY);
-  }
-  document.getElementById('undo-btn').disabled = undoStack.length === 0;
-  render();
 }
 
 function getCount(data, day, muscle) {
@@ -193,8 +176,6 @@ function scheduleRollover() {
   if (now >= next) next.setDate(next.getDate() + 1);
   setTimeout(() => { render(); scheduleRollover(); }, next - now);
 }
-
-document.getElementById('undo-btn').addEventListener('click', undo);
 
 document.querySelectorAll('.segment').forEach(btn => {
   btn.addEventListener('click', () => {
