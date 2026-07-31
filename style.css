@@ -203,3 +203,22 @@ h1 {
 .muscle-item.yesterday .name { color: var(--orange); }
 .muscle-item.expiring  .name { color: var(--yellow); }
 .muscle-item.recent    .name { color: var(--blue); }
+
+.undo-btn {
+  display: block;
+  margin: 1.5rem auto 0;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 1;
+  transition: opacity 0.15s;
+}
+
+.undo-btn:disabled {
+  opacity: 0.2;
+  cursor: default;
+}
