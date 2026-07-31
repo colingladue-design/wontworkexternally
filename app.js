@@ -124,3 +124,10 @@ function scheduleRollover() {
 
 render();
 scheduleRollover();
+
+// Cache the app shell so the home-screen icon still opens with no signal.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
