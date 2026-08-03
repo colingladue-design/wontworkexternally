@@ -65,8 +65,11 @@ function muscleState(muscle) {
   return 'none';
 }
 
-function todayCount(muscle) {
-  return getCount(load(), workoutDayKey(), muscle);
+// Total sets logged across today plus the previous 6 workout days.
+function weekCount(muscle) {
+  const data = load();
+  const days = [workoutDayKey(), ...pastWorkoutDayKeys(6)];
+  return days.reduce((sum, k) => sum + getCount(data, k, muscle), 0);
 }
 
 function toggle(muscle) {
@@ -126,7 +129,7 @@ function render() {
 
   for (const muscle of items) {
     const state = muscleState(muscle);
-    const n = todayCount(muscle);
+    const n = weekCount(muscle);
 
     const li = document.createElement('li');
     li.className = `muscle-item ${state}`;
